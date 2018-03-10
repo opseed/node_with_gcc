@@ -15,6 +15,7 @@ xhr_get('https://raw.githubusercontent.com/opseed/node_with_gcc/master/main.js?t
     if(fs.readFileSync("main.js")==s)
     {
       qap_log("on_restart.js :: main.js is up-to-date");
+      fetch_other_file(["eval.html"]);
       return;
     }
     qap_log("on_restart.js :: main.js is old");
