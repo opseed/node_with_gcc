@@ -1,0 +1,20 @@
+{
+  "name": "node_with_gcc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js 2>&1 | tee index.log",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opseed/node_with_gcc.git"
+  },
+  "author": "opseed@inbox.ru",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/opseed/node_with_gcc/issues"
+  },
+  "homepage": "https://github.com/opseed/node_with_gcc#readme"
+}
