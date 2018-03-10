@@ -22,7 +22,6 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
 
 if(process.argv.length>=3){
   port=process.argv[2]|0;
-  qap_log(json(process.argv));process.exit();
 }
 
 var get_tick_count=()=>new Date().getTime();
