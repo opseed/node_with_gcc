@@ -355,7 +355,11 @@ var new_link=()=>{var out={id:gen_link_id()};g_links[out.id]=out;return out;}
 var requestListener=(request,response)=>{
   var purl=url.parse(request.url);var uri=purl.pathname;var qp=qs.parse(purl.query);
   var filename = path.join(process.cwd(), uri);
-
+  
+  if(uri=='/pagecount'){
+    response.writeHead(200,{"Content-Type":"text/plain"});
+    return response.end('ok');
+  }
   qap_log("url = "+purl.path);
   
   if("/rt_sh"==uri)
@@ -398,13 +402,13 @@ var requestListener=(request,response)=>{
     return;
   }
   var contentTypesByExtension={
-    '.html': "text/html", // "/eval.html" "/eval_hljs.html"
+    '.html': "text/html", // "/eval.html"
     '.css':  "text/css",
     '.js':   "text/javascript",
     '.txt':  "text/plain",
     '.php':  "text/plain",
     '.json':  "text/plain",
-    '.log':  "text/plain", // "/mainloop.log"
+    '.log':  "text/plain", // "/index.log"
     '.mem':  "application/octet-stream",
     '.bin':  "application/octet-stream",
     '.png':  "image/png",
@@ -511,34 +515,6 @@ var requestListener=(request,response)=>{
           fs.readFile("json2table_fish.html",(err,data)=>{if(err)throw err;cb(""+data);})
           return;
         }
-        if("/api"==uri){
-          if(!('a' in qp))return txt("param 'a' - required");
-          if(qp.a=='get_backend'){
-            if(!('task_id' in qp))return txt("param 'task_id' - required");
-            var is_int=v=>((v|0)+'')===v;if(!is_int(qp.task_id))return txt("no way");
-            return txt('no impl');
-          }
-          return txt('no impl');
-        }
-        if("/perform"==uri){
-          return txt('wrong way');
-          if(!('task_id' in qp))return txt("param 'task_id' - required");
-          if(!('remotehost' in qp))return txt("remotehost - required");
-          var is_int=v=>((v|0)+'')===v;if(!is_int(qp.task_id))return txt("no way");
-          execSync("mkdir tmp");
-          var tmp="./tmp/rnd"+rand();
-          exec(
-            "mkdir "+tmp+";cd "+tmp+";"+
-            "curl "+qp.remotehost+"/api?a=get_backend?tmp="+tmp+"&task_id="+qp.task_id+">backend.zip|tee ./curl.backend.log;"+
-            "unzip backend.zip|tee ./backend.unzip.log;"+
-            "nohup nice -n15 ./start.sh 2>&1|tee ./start.sh.log",
-            (err,so,se)=>{
-              if(err)return qap_log("error at /perform:"+inspect(err));
-              qap_log("task done: "+qp.task_id);
-            }
-          );
-          return txt("ok. //"+getDateTime());
-        }
         if("/g_obj.json"==uri){
           if('raw' in qp)return txt(json(g_obj));
           if('data' in qp)return json(mapdrop(mapclone(g_obj),'g_obj.json'));
@@ -548,17 +524,6 @@ var requestListener=(request,response)=>{
         if("/hosts.json"==uri){
           hosts_sync(s=>txt(s));
           return;
-        }
-        if("/e"==uri){
-          return txt("selfafiliate.txt");
-        }
-        if("/shadows_links"==uri){
-          response.off();var ls='<a href="/fetch?quit">this/fetch?quit</a><hr><a href="/ls">this/ls</a>';
-          return html(ls+"<hr>"+shadows.map(e=>"http://"+e+"/fetch?quit").map(e=>'<a href="'+e+'">'+e+'</a>').join("<hr>"));
-        }
-        var log_incdec_sumator=log=>{
-          return log.map(e=>e.request_uri).map(e=>url.parse(e).pathname).
-          map(e=>e=="/inc"?+1:(e=="/dec"?-1:0)).reduce((p,v)=>p+v,0);
         }
         var txt_conf_exec=cmd=>txt("conf = nwgcc\n"+execSync(cmd));
         if("/ll"==uri){return txt_conf_exec("ls -l");}
@@ -595,7 +560,7 @@ var requestListener=(request,response)=>{
           )),e=>e.mass));
         }
         if("/mmll"==uri){
-          var fn='mainloop.log';
+          var fn='index.log';
           var pos=fs.statSync(fn).size-8*1024;
           if(pos<0)pos=0;
           fs.createReadStream(fn,{start:pos}).pipe(response);
@@ -739,7 +704,6 @@ var requestListener=(request,response)=>{
           });
           return;
         }
-        if(uri=='/pagecount')return txt('ok');
         if(!exists){
           response.writeHead(404, {"Content-Type": "text/plain"});
           response.end("404 Not Found\n");
