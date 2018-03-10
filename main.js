@@ -21,7 +21,7 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURLLabel = "";
 
 if(process.argv.length>=3){
-  port=process.argv|0;
+  port=process.argv[2]|0;
 }
 
 var get_tick_count=()=>new Date().getTime();
