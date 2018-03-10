@@ -20,6 +20,10 @@ var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
     mongoURLLabel = "";
 
+if(process.argv.length>=3){
+  port=process.argv|0;
+}
+
 var get_tick_count=()=>new Date().getTime();
 var get_ms=()=>{var a=process.hrtime();return a[0]*1e3+a[1]/1e6;}
 var unixtime=()=>(new Date()/1000);
