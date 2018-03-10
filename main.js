@@ -739,6 +739,7 @@ var requestListener=(request,response)=>{
           });
           return;
         }
+        if(uri=='/pagecount')return txt('ok');
         if(!exists){
           response.writeHead(404, {"Content-Type": "text/plain"});
           response.end("404 Not Found\n");
