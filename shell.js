@@ -104,7 +104,8 @@ var dns2h={
   "vm52.herokuapp.com":"vm52",
   "vm10-vm10.1d35.starter-us-east-1.openshiftapps.com":"vm10",
   "vm20-vm20.1d35.starter-us-east-1.openshiftapps.com":"vm20",
-  "vm30-vm30.193b.starter-ca-central-1.openshiftapps.com":"vm30"
+  "vm30-vm30.193b.starter-ca-central-1.openshiftapps.com":"vm30",
+  "nwg-nwg.193b.starter-ca-central-1.openshiftapps.com":"nwg",
 };
 var h2dns={};for(var dns in dns2h){h2dns[dns2h[dns]]=dns;}
 
@@ -152,7 +153,7 @@ var xhr_blob_upload=(method,URL,ok,err,fn)=>{
   );
   var f=fn=>{
     toR("fn")(fn);
-    fs.createReadStream("../../Release/"+fn).on('data',toR("data")).on('end',()=>{toR("end")();});
+    fs.createReadStream(fn).on('data',toR("data")).on('end',()=>{toR("end")();});
   }
   f(fn);
   var ping=toR("ping");var iter=0;setInterval(()=>ping(""+(iter++)),500);
