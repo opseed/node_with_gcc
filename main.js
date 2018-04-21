@@ -446,6 +446,7 @@ var requestListener=(request,response)=>{
     var is_dir=fn=>fs.statSync(filename).isDirectory();
     fs.exists(filename,ok=>{if(ok&&is_dir(filename))filename+='/index.html';func(filename);});
     var func=filename=>fs.exists(filename,function(exists) {
+      var resp_off=()=>{response.off();}
       var raw_quit=()=>{setTimeout(()=>process.exit(),16);}
       var quit=()=>{raw_quit();return txt("["+getDateTime()+"] ok");}
       var png=((res)=>{var r=res;return s=>{r.writeHead(200,{"Content-Type":"image/png"});r.end(new Buffer(s,"binary"));}})(response);
