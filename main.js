@@ -453,6 +453,9 @@ var requestListener=(request,response)=>{
       var txtbin=((res)=>{var r=res;return s=>{r.writeHead(200,{"Content-Type":"text/plain"});r.end(new Buffer(s,"binary"));}})(response);
       var html=((res)=>{var r=res;return s=>{r.writeHead(200,{"Content-Type":"text/html"});r.end(s);}})(response);
       var txt=((res)=>{var r=res;return s=>{r.writeHead(200,{"Content-Type":"text/plain"});r.end(s);}})(response);
+      var exec_post_data=()=>{
+        var r=response;resp_off();exec_with_stream(POST.data.split("\r").join(""),r);
+      }
       var async_cl_and_exec_cpp=(code,flags)=>{
         cl_and_exec_cpp(
           code,
